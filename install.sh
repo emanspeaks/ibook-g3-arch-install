@@ -7,6 +7,7 @@
 mac-fdisk /dev/sda <<EOF
 i
 y
+
 C
 64
 28M
