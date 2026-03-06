@@ -12,4 +12,4 @@ Choose the installer from the menu and wait while Linux boots.
 This will take a long time.
 
 Once you get to a command prompt, enter:
-`curl -sL https://raw.githubusercontent.com/emanspeaks/ibook-g3-arch-install/main/install.sh | bash`
+`bash <(curl -sL https://raw.githubusercontent.com/emanspeaks/ibook-g3-arch-install/main/install.sh)`
