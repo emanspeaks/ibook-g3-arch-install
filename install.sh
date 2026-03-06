@@ -23,13 +23,17 @@ c
 swap
 w
 y
+p
 q
 EOF
-timedatectl
 hformat /dev/sda2
 mkfs.ext4 /dev/sda3
 mkswap /dev/sda4
 swapon /dev/sda4
+
+sleep 10  # to ensure i can see any errors in disk setup before proceeding
+
+timedatectl
 mount /dev/sda3 /mnt
 pacstrap /mnt/ \
   base \
@@ -48,7 +52,9 @@ pacstrap /mnt/ \
   man-pages \
   texinfo \
   btop \
-  hyfetch
+  hyfetch \
+  tmux
+
 mkdir /mnt/boot/grub
 mount /dev/sda2 /mnt/boot/grub
 genfstab -U /mnt > /mnt/etc/fstab
