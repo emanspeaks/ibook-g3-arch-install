@@ -58,6 +58,7 @@ pacstrap /mnt/ \
 mkdir /mnt/boot/grub
 mount /dev/sda2 /mnt/boot/grub
 genfstab -U /mnt > /mnt/etc/fstab
+
 IFACE=$(ip -o link show | awk -F': ' '$2 != "lo" {print $2; exit}')
 MAC=$(cat /sys/class/net/$IFACE/address)
 cat > /etc/systemd/network/10-${IFACE}.link << EOF
@@ -67,6 +68,12 @@ PermanentMACAddress=$MAC
 [Link]
 Name=eth0
 EOF
+
+cat > /etc/ssh/sshd_config.d/root.conf << EOF
+PermitRootLogin yes
+PasswordAuthentication yes
+EOF
+
 arch-chroot /mnt <<EOF
 grub-mkconfig -o /boot/grub/grub.cfg
 grub-install
