@@ -45,7 +45,8 @@ pacstrap /mnt/ \
   man-db \
   man-pages \
   texinfo \
-  btop
+  btop \
+  hyfetch
 mkdir /mnt/boot/grub
 mount /dev/sda2 /mnt/boot/grub
 genfstab -U /mnt > /mnt/etc/fstab
