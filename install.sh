@@ -106,6 +106,6 @@ hmount /dev/sda2
 hattrib -t tbxi :grub
 hattrib -b :
 humount
-echo "Press any key to reboot..."
-read -srn 1
+# echo "Press any key to reboot..."
+# read -srn 1
 reboot
