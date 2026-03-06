@@ -68,7 +68,7 @@ genfstab -U /mnt > /mnt/etc/fstab
 
 IFACE=$(ip -o link show | awk -F': ' '$2 != "lo" {print $2; exit}')
 MAC=$(cat /sys/class/net/$IFACE/address)
-cat > /etc/systemd/network/10-${IFACE}.link << EOF
+cat > /mnt/etc/systemd/network/10-${IFACE}.link <<EOF
 [Match]
 PermanentMACAddress=$MAC
 
@@ -76,7 +76,7 @@ PermanentMACAddress=$MAC
 Name=eth0
 EOF
 
-cat > /etc/ssh/sshd_config.d/root.conf << EOF
+cat > /mnt/etc/ssh/sshd_config.d/root.conf <<EOF
 PermitRootLogin yes
 PasswordAuthentication yes
 EOF
