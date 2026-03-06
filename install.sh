@@ -120,6 +120,9 @@ EOF
 # keycode  60 = F2
 # EOF
 
+mkdir -p /mnt/opt/zig
+curl -sL https://raw.githubusercontent.com/emanspeaks/ibook-g3-arch-install/main/zig.sh -o /mnt/opt/zig/build.sh
+
 arch-chroot /mnt <<EOF
 grub-mkconfig -o /boot/grub/grub.cfg
 grub-install
