@@ -114,11 +114,18 @@ EOF
 # ExecStart=-/sbin/agetty --autologin btop-monitor --noclear %I \$TERM
 # EOF
 
-# mkdir -p /mnt/usr/local/share/kbd/keymaps
-# cat > /mnt/usr/local/share/kbd/keymaps/ibook.map <<EOF
-# keycode  59 = F1
-# keycode  60 = F2
-# EOF
+mkdir -p /mnt/usr/local/share/kbd/keymaps
+cat > /mnt/usr/local/share/kbd/keymaps/ibook.map <<EOF
+include "us"
+
+alt keycode 65 = Console_1
+control alt keycode 65 = Console_1
+alt keycode 66 = Console_2
+control alt keycode 66 = Console_2
+alt keycode 67 = Console_3
+control alt keycode 67 = Console_3
+EOF
+echo "KEYMAP=/usr/local/share/kbd/keymaps/ibook.map" > /mnt/etc/vconsole.conf
 
 mkdir -p /mnt/opt/zig
 curl -sL https://raw.githubusercontent.com/emanspeaks/ibook-g3-arch-install/main/zig.sh -o /mnt/opt/zig/build.sh
