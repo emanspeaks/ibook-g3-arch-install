@@ -1,6 +1,6 @@
 #!/bin/bash
 
-read -sp "Enter hostname: " NEW_HOSTNAME
+read -p "Enter hostname: " NEW_HOSTNAME
 echo
 read -sp "Enter root password: " ROOT_PASSWORD
 echo
