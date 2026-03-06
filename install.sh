@@ -98,9 +98,14 @@ systemctl enable systemd-resolved
 systemctl enable systemd-networkd
 systemctl enable systemd-timesyncd
 EOF
+sync
+sync
+sync
 umount -R /mnt
 hmount /dev/sda2
 hattrib -t tbxi :grub
 hattrib -b :
 humount
+echo "Press any key to reboot..."
+read -srn 1
 reboot
