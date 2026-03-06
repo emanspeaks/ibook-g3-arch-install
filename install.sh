@@ -1,5 +1,7 @@
 #!/bin/bash
 
+read -sp "Enter hostname: " NEW_HOSTNAME
+echo
 read -sp "Enter root password: " ROOT_PASSWORD
 echo
 
@@ -60,7 +62,11 @@ pacstrap /mnt/ \
   texinfo \
   btop \
   hyfetch \
-  tmux
+  tmux \
+  clang \
+  cmake \
+  llvm \
+  lld
 
 mkdir /mnt/boot/grub
 mount /dev/sda2 /mnt/boot/grub
@@ -76,10 +82,43 @@ PermanentMACAddress=$MAC
 Name=eth0
 EOF
 
+mkdir -p /mnt/etc/ssh/sshd_config.d
 cat > /mnt/etc/ssh/sshd_config.d/root.conf <<EOF
 PermitRootLogin yes
 PasswordAuthentication yes
 EOF
+
+mkdir -p /mnt/root/.config
+cat > /mnt/root/.config/hyfetch.json <<EOF
+{
+    "preset": "rainbow",
+    "mode": "rgb",
+    "auto_detect_light_dark": false,
+    "light_dark": "dark",
+    "lightness": 0.65,
+    "color_align": {
+        "mode": "horizontal"
+    },
+    "backend": "neofetch",
+    "args": null,
+    "distro": null,
+    "pride_month_disable": false,
+    "custom_ascii_path": null
+}
+EOF
+
+# mkdir -p /mnt/etc/systemd/system/getty@tty1.service.d
+# cat > /mnt/etc/systemd/system/getty@tty1.service.d/override.conf <<EOF
+# [Service]
+# ExecStart=
+# ExecStart=-/sbin/agetty --autologin btop-monitor --noclear %I \$TERM
+# EOF
+
+# mkdir -p /mnt/usr/local/share/kbd/keymaps
+# cat > /mnt/usr/local/share/kbd/keymaps/ibook.map <<EOF
+# keycode  59 = F1
+# keycode  60 = F2
+# EOF
 
 arch-chroot /mnt <<EOF
 grub-mkconfig -o /boot/grub/grub.cfg
@@ -89,7 +128,7 @@ hwclock --systohc
 echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
-echo "orion" > /etc/hostname
+echo "$NEW_HOSTNAME" > /etc/hostname
 echo "$ROOT_PASSWORD" | passwd --stdin root
 ln -s /usr/lib/systemd/network/80-wifi-station.network.example /etc/systemd/network/80-wifi-station.network
 ln -s /usr/lib/systemd/network/89-ethernet.network.example /etc/systemd/network/89-ethernet.network
@@ -97,6 +136,7 @@ systemctl enable sshd
 systemctl enable systemd-resolved
 systemctl enable systemd-networkd
 systemctl enable systemd-timesyncd
+adduser --system --shell $(which btop) btop-monitor
 EOF
 sync
 sync
