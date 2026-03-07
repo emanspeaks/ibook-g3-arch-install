@@ -91,6 +91,7 @@ pacstrap /mnt/ \
   cmake \
   llvm \
   lld \
+  make \
   which
 
 mkdir /mnt/boot/grub
