@@ -66,7 +66,8 @@ pacstrap /mnt/ \
   clang \
   cmake \
   llvm \
-  lld
+  lld \
+  which
 
 mkdir /mnt/boot/grub
 mount /dev/sda2 /mnt/boot/grub
