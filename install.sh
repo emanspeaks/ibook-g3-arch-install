@@ -107,16 +107,16 @@ cat > /mnt/root/.config/hyfetch.json <<EOF
 }
 EOF
 
-# mkdir -p /mnt/etc/systemd/system/getty@tty1.service.d
-# cat > /mnt/etc/systemd/system/getty@tty1.service.d/override.conf <<EOF
-# [Service]
-# ExecStart=
-# ExecStart=-/sbin/agetty --autologin btop-monitor --noclear %I \$TERM
-# EOF
+mkdir -p /mnt/etc/systemd/system/getty@tty1.service.d
+cat > /mnt/etc/systemd/system/getty@tty1.service.d/override.conf <<EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin btop-monitor --noclear %I \$TERM
+EOF
 
 mkdir -p /mnt/usr/local/share/kbd/keymaps
 cat > /mnt/usr/local/share/kbd/keymaps/ibook.map <<EOF
-include "us"
+include "/usr/share/kbd/keymaps/i386/qwerty/us.map.gz"
 
 alt keycode 65 = Console_1
 control alt keycode 65 = Console_1
@@ -146,7 +146,7 @@ systemctl enable sshd
 systemctl enable systemd-resolved
 systemctl enable systemd-networkd
 systemctl enable systemd-timesyncd
-adduser --system --shell $(which btop) btop-monitor
+adduser --system --shell \$(which btop) btop-monitor
 EOF
 sync
 sync
