@@ -157,6 +157,7 @@ hmount /dev/sda2
 hattrib -t tbxi :grub
 hattrib -b :
 humount
+echo "Install complete!"
 # echo "Press any key to reboot..."
 # read -srn 1
-reboot
+# reboot
