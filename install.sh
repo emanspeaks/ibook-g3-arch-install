@@ -9,6 +9,9 @@ echo
 # start block for root partition is block 57408 = 64 + 28*1024*2
 # start block for swap partition is block 71360576 = 57408 + 71303168
 # swap size is 6779584 [blocks] = 78140160 - 71360576
+umount /dev/sda2
+umount /dev/sda3
+swapoff -a
 mac-fdisk /dev/sda <<EOF
 i
 y
