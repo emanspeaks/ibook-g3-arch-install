@@ -49,9 +49,7 @@ timedatectl
 mount /dev/sda3 /mnt
 # remove these from the list of packages to install for now
 #   linux-firmware \
-#   xf86-video-amdgpu \
 #   vulkan-radeon \
-#   mesa \
 #   wpa_supplicant \
 pacstrap /mnt/ \
   base \
@@ -59,6 +57,8 @@ pacstrap /mnt/ \
   vim \
   grub \
   hfsutils \
+  mesa \
+  xf86-video-amdgpu \
   openssh \
   git \
   man-db \
