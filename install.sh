@@ -61,7 +61,8 @@ control alt keycode 66 = Console_2
 alt keycode 67 = Console_3
 control alt keycode 67 = Console_3
 EOF
-echo "KEYMAP=/usr/local/share/kbd/keymaps/ibook.map" > /mnt/etc/vconsole.conf
+cp /mnt/usr/local/share/kbd/keymaps/ibook.map /usr/local/share/kbd/keymaps/ibook.map
+echo "KEYMAP=/usr/local/share/kbd/keymaps/ibook.map" > /etc/vconsole.conf
 
 # remove these from the list of packages to install for now
 #   linux-firmware \
@@ -93,7 +94,7 @@ pacstrap /mnt/ \
   which
 
 mkdir /mnt/boot/grub
-mount /dev/sda2 /mnt/boot/grub
+mount -w /dev/sda2 /mnt/boot/grub
 genfstab -U /mnt > /mnt/etc/fstab
 
 IFACE=$(ip -o link show | awk -F': ' '$2 != "lo" {print $2; exit}')
@@ -110,25 +111,6 @@ mkdir -p /mnt/etc/ssh/sshd_config.d
 cat > /mnt/etc/ssh/sshd_config.d/root.conf <<EOF
 PermitRootLogin yes
 PasswordAuthentication yes
-EOF
-
-mkdir -p /mnt/root/.config
-cat > /mnt/root/.config/hyfetch.json <<EOF
-{
-    "preset": "rainbow",
-    "mode": "rgb",
-    "auto_detect_light_dark": false,
-    "light_dark": "dark",
-    "lightness": 0.65,
-    "color_align": {
-        "mode": "horizontal"
-    },
-    "backend": "neofetch",
-    "args": null,
-    "distro": null,
-    "pride_month_disable": false,
-    "custom_ascii_path": null
-}
 EOF
 
 mkdir -p /mnt/opt/zig
@@ -150,8 +132,33 @@ systemctl enable sshd
 systemctl enable systemd-resolved
 systemctl enable systemd-networkd
 systemctl enable systemd-timesyncd
-useradd --system --shell \$(which btop) btop-monitor
+useradd -m --system --shell \$(which bash) btop-monitor
 EOF
+
+echo "KEYMAP=/usr/local/share/kbd/keymaps/ibook.map" > /mnt/etc/vconsole.conf
+
+mkdir -p /mnt/root/.config
+cat > /mnt/root/.config/hyfetch.json <<EOF
+{
+    "preset": "rainbow",
+    "mode": "rgb",
+    "auto_detect_light_dark": false,
+    "light_dark": "dark",
+    "lightness": 0.65,
+    "color_align": {
+        "mode": "horizontal"
+    },
+    "backend": "neofetch",
+    "args": null,
+    "distro": null,
+    "pride_month_disable": false,
+    "custom_ascii_path": null
+}
+EOF
+# cp /mnt/root/.config/hyfetch.json /mnt/home/btop-monitor/.config/hyfetch.json
+# chown -R btop-monitor:btop-monitor /mnt/home/btop-monitor/
+
+echo "btop" > /mnt/home/btop-monitor/.bash_profile
 
 mkdir -p /mnt/etc/systemd/system/getty@tty1.service.d
 cat > /mnt/etc/systemd/system/getty@tty1.service.d/override.conf <<EOF
