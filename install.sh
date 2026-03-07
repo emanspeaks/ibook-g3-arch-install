@@ -44,19 +44,20 @@ sleep 10  # to ensure i can see any errors in disk setup before proceeding
 
 timedatectl
 mount /dev/sda3 /mnt
+# remove these from the list of packages to install for now
+#   linux-firmware \
+#   xf86-video-amdgpu \
+#   vulkan-radeon \
+#   mesa \
+#   wpa_supplicant \
 pacstrap /mnt/ \
   base \
   linux \
-  linux-firmware \
   vim \
   grub \
   hfsutils \
   openssh \
   git \
-  mesa \
-  xf86-video-amdgpu \
-  vulkan-radeon \
-  wpa_supplicant \
   man-db \
   man-pages \
   texinfo \
