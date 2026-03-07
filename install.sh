@@ -47,6 +47,20 @@ sleep 10  # to ensure i can see any errors in disk setup before proceeding
 
 timedatectl
 mount /dev/sda3 /mnt
+
+mkdir -p /mnt/usr/local/share/kbd/keymaps
+cat > /mnt/usr/local/share/kbd/keymaps/ibook.map <<EOF
+include "/usr/share/kbd/keymaps/i386/qwerty/us.map.gz"
+
+alt keycode 65 = Console_1
+control alt keycode 65 = Console_1
+alt keycode 66 = Console_2
+control alt keycode 66 = Console_2
+alt keycode 67 = Console_3
+control alt keycode 67 = Console_3
+EOF
+echo "KEYMAP=/usr/local/share/kbd/keymaps/ibook.map" > /mnt/etc/vconsole.conf
+
 # remove these from the list of packages to install for now
 #   linux-firmware \
 #   vulkan-radeon \
@@ -57,6 +71,9 @@ pacstrap /mnt/ \
   vim \
   grub \
   hfsutils \
+  linux-firmware-amdgpu \
+  linux-firmware-radeon \
+  linux-headers \
   mesa \
   xf86-video-amdgpu \
   openssh \
@@ -112,26 +129,6 @@ cat > /mnt/root/.config/hyfetch.json <<EOF
 }
 EOF
 
-mkdir -p /mnt/etc/systemd/system/getty@tty1.service.d
-cat > /mnt/etc/systemd/system/getty@tty1.service.d/override.conf <<EOF
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin btop-monitor --noclear %I \$TERM
-EOF
-
-mkdir -p /mnt/usr/local/share/kbd/keymaps
-cat > /mnt/usr/local/share/kbd/keymaps/ibook.map <<EOF
-include "/usr/share/kbd/keymaps/i386/qwerty/us.map.gz"
-
-alt keycode 65 = Console_1
-control alt keycode 65 = Console_1
-alt keycode 66 = Console_2
-control alt keycode 66 = Console_2
-alt keycode 67 = Console_3
-control alt keycode 67 = Console_3
-EOF
-echo "KEYMAP=/usr/local/share/kbd/keymaps/ibook.map" > /mnt/etc/vconsole.conf
-
 mkdir -p /mnt/opt/zig
 curl -sL https://raw.githubusercontent.com/emanspeaks/ibook-g3-arch-install/main/zig.sh -o /mnt/opt/zig/build.sh
 
@@ -151,8 +148,16 @@ systemctl enable sshd
 systemctl enable systemd-resolved
 systemctl enable systemd-networkd
 systemctl enable systemd-timesyncd
-adduser --system --shell \$(which btop) btop-monitor
+useradd --system --shell \$(which btop) btop-monitor
 EOF
+
+mkdir -p /mnt/etc/systemd/system/getty@tty1.service.d
+cat > /mnt/etc/systemd/system/getty@tty1.service.d/override.conf <<EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin btop-monitor --noclear %I \$TERM
+EOF
+
 sync
 sync
 sync
