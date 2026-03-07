@@ -5,17 +5,6 @@ echo
 read -sp "Enter root password: " ROOT_PASSWORD
 echo
 
-# pre-wipe disk:
-mac-fdisk /dev/sda <<EOF
-i
-y
-
-w
-y
-p
-q
-EOF
-
 # block size is 512 bytes, total blocks is 78140160
 # start block for root partition is block 57408 = 64 + 28*1024*2
 # start block for swap partition is block 71360576 = 57408 + 71303168
