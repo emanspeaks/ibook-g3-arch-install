@@ -92,7 +92,9 @@ pacstrap /mnt/ \
   llvm \
   lld \
   make \
-  which
+  which \
+  gcc \
+  zram-generator
 
 mkdir /mnt/boot/grub
 mount -w /dev/sda2 /mnt/boot/grub
@@ -167,6 +169,26 @@ cat > /mnt/etc/systemd/system/getty@tty1.service.d/override.conf <<EOF
 ExecStart=
 ExecStart=-/sbin/agetty --autologin btop-monitor --noclear %I \$TERM
 EOF
+
+# memory optimization stuff
+cat > /mnt/etc/sysctl.d/99-low-ram-tuning.conf <<EOF
+vm.watermark_scale_factor = 150
+vm.vfs_cache_pressure = 150
+vm.swappiness = 10
+vm.min_free_kbytes = 8192
+vm.page-cluster = 0
+EOF
+cat > /mnt/etc/systemd/zram-generator.conf <<EOF
+[zram0]
+zram-size = 128
+compression-algorithm = lzo-rle
+swap-priority = 100
+fs-type = swap
+EOF
+# consider setting pri=5 in fstab for the swap partition to ensure the zram
+# swap is preferred over the disk swap, but not sure if it's necessary with
+# the low swappiness setting above
+#UUID=your-uuid-here  none  swap  defaults,pri=5  0  0
 
 sync
 sync
